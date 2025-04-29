@@ -1,8 +1,20 @@
 using LearningBotApi.Data;
 using LearningBotApi.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigins", // Changed from single to double quotes
+        policy =>
+        {
+            policy
+            .AllowAnyOrigin() // Allow any origin
+            .AllowAnyMethod() // Allow any HTTP method
+            .AllowAnyHeader(); // Allow any header
+        });
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -50,6 +62,7 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseCors("AllowAnyOrigins");
 
 app.Run();
 
